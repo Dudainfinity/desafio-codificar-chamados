@@ -3,6 +3,8 @@
 Aplicação web para abertura e acompanhamento de chamados internos, com
 distribuição automática de responsáveis. Desenvolvida como desafio técnico.
 
+![Tela de chamados internos](docs/screenshot.png)
+
 ## Stack
 
 - **Ruby on Rails 8** (Ruby 3.2.2)
