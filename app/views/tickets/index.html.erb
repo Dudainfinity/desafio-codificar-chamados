@@ -1,0 +1,54 @@
+<div class="max-w-5xl mx-auto p-6">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Chamados internos</h1>
+    <%= link_to "Novo chamado", new_ticket_path,
+        class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700" %>
+  </div>
+
+  <%= form_with url: tickets_path, method: :get, class: "flex flex-wrap gap-3 mb-6" do |f| %>
+    <%= f.select :status,
+        options_for_select(Ticket.statuses.keys.map { |s| [s.humanize, s] }, params[:status]),
+        { include_blank: "Todos os status" }, class: "border rounded px-3 py-2" %>
+    <%= f.select :priority,
+        options_for_select(Ticket.priorities.keys.map { |p| [p.humanize, p] }, params[:priority]),
+        { include_blank: "Todas as prioridades" }, class: "border rounded px-3 py-2" %>
+    <%= f.select :agent_id,
+        options_from_collection_for_select(@agents, :id, :name, params[:agent_id]),
+        { include_blank: "Todos os responsaveis" }, class: "border rounded px-3 py-2" %>
+    <%= f.submit "Filtrar", class: "bg-gray-700 text-white px-4 py-2 rounded cursor-pointer" %>
+    <%= link_to "Limpar", tickets_path, class: "px-4 py-2 text-gray-600 underline" %>
+  <% end %>
+
+  <div class="bg-white rounded shadow overflow-hidden">
+    <table class="w-full text-left">
+      <thead class="bg-gray-100 text-gray-600 text-sm">
+        <tr>
+          <th class="px-4 py-3">Titulo</th>
+          <th class="px-4 py-3">Prioridade</th>
+          <th class="px-4 py-3">Status</th>
+          <th class="px-4 py-3">Responsavel</th>
+          <th class="px-4 py-3">Aberto em</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @tickets.each do |ticket| %>
+          <tr class="border-t hover:bg-gray-50">
+            <td class="px-4 py-3">
+              <%= link_to ticket.title, ticket, class: "text-blue-600 hover:underline" %>
+            </td>
+            <td class="px-4 py-3"><%= ticket.priority.humanize %></td>
+            <td class="px-4 py-3"><%= ticket.status.humanize %></td>
+            <td class="px-4 py-3"><%= ticket.agent.name %></td>
+            <td class="px-4 py-3 text-sm text-gray-500">
+              <%= ticket.created_at.strftime("%d/%m/%Y %H:%M") %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <% if @tickets.empty? %>
+      <p class="px-4 py-6 text-gray-500">Nenhum chamado encontrado.</p>
+    <% end %>
+  </div>
+</div>
